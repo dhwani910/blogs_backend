@@ -62,6 +62,7 @@ def blogPage():
         result = None
         post = request.get_json()
         content = post["content"]
+        # post_id = request.json.get(id)
         # b_content = request.json.get(content)
         # print(post.get('content'))
         
@@ -104,6 +105,7 @@ def blogPage():
         result = None
         post = request.get_json()
         content = post["content"]
+        # post_id = post["id"]
         # post_id = request.json.get("id")
         try:
             conn = connect()
@@ -176,7 +178,7 @@ def connect():
          database = dbcreds.database
     )
 
-@app.route('/users', methods = ['GET','POST', 'PATCH', 'DELETE'])
+@app.route('/api/users', methods = ['GET','POST', 'PATCH', 'DELETE'])
 
 
 def users():
@@ -220,13 +222,20 @@ def users():
     elif request.method == 'POST':
         conn = None
         cursor = None
-        user = request.json
+        user = request.get_json()
+        # username = user["username"]
+        # password = user["password"]
+        username = "hiren"
+        password = "pass"
+       
         
         try:
             conn = connect()
             cursor = conn.cursor()
             cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", [username, password])
             conn.commit()
+            result = cursor.rowcount
+            print("###########",result)
         except Exception as ex:
             print("error")
             print(ex)
