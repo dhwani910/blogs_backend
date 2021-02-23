@@ -104,11 +104,11 @@ def blogPage():
         result = None
         post = request.get_json()
         content = post["content"]
-        post_id = request.json.get("id")
+        # post_id = request.json.get("id")
         try:
             conn = connect()
             cursor = conn.cursor()
-            cursor.execute("UPDATE posts SET content=? WHERE id = ? ", ["content, post_id"])
+            cursor.execute("UPDATE posts SET content=?", [content])
             conn.commit()
             result = cursor.rowcount
             print("########", result)
@@ -136,11 +136,11 @@ def blogPage():
         conn = None
         cursor = None
         result = None
-        post_id = request.json.get("id")
+        # post_id = request.json.get("id")
         try:
             conn = connect()
             cursor = conn.cursor()
-            cursor.execute("DELETE FROM posts WHERE id = ?", [post_id])
+            cursor.execute("DELETE FROM posts")
             conn.commit()
             result = cursor.rowcount
         except Exception as ex:
