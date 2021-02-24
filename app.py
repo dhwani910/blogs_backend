@@ -350,7 +350,7 @@ def login():
         
         try:
             conn = connect()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", [username, password])
             conn.commit()
             result = cursor.rowcount
@@ -388,7 +388,7 @@ def login():
         user_id = request.json
         try:
             conn = connect()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute("DELETE FROM users WHERE id = ?", [user_id])
             conn.commit()
         except Exception as ex:
