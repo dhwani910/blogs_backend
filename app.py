@@ -32,7 +32,7 @@ def blogPage():
         result = None
         try:
             conn = connect()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute("SELECT * FROM posts")
             result = cursor.fetchall()
         except Exception as ex:
@@ -68,7 +68,7 @@ def blogPage():
         
         try:
             conn = connect()
-            cursor = conn.cursor()
+            cursor = conn.cursor(dictionary=True)
             cursor.execute("INSERT INTO posts(content) VALUES (?)", [content])
             conn.commit()
             result = cursor.rowcount
@@ -105,12 +105,12 @@ def blogPage():
         result = None
         post = request.get_json()
         content = post["content"]
-        # post_id = post["id"]
+        post_id = post["id"]
         # post_id = request.json.get("id")
         try:
             conn = connect()
-            cursor = conn.cursor()
-            cursor.execute("UPDATE posts SET content=?", [content])
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("UPDATE posts SET content=? WHERE id = ?", [content, post_id])
             conn.commit()
             result = cursor.rowcount
             print("########", result)
@@ -138,11 +138,13 @@ def blogPage():
         conn = None
         cursor = None
         result = None
+        post = request.get_json()
+        post_id = post["id"]
         # post_id = request.json.get("id")
         try:
             conn = connect()
-            cursor = conn.cursor()
-            cursor.execute("DELETE FROM posts")
+            cursor = conn.cursor(dictionary=True)
+            cursor.execute("DELETE FROM posts WHERE id = ?", [post_id] )
             conn.commit()
             result = cursor.rowcount
         except Exception as ex:
