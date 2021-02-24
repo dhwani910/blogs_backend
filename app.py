@@ -223,10 +223,9 @@ def users():
         conn = None
         cursor = None
         user = request.get_json()
-        # username = user["username"]
-        # password = user["password"]
-        username = "hiren"
-        password = "pass"
+        username = user["username"]
+        password = user["password"]
+        
        
         
         try:
@@ -323,4 +322,90 @@ def users():
                 )    
 
 
+# End point for login and logout
 
+
+def connect():
+      return mariadb.connect(
+         user = dbcreds.user,
+         password = dbcreds.password,
+         host = dbcreds.host,
+         port = dbcreds.port,
+         database = dbcreds.database
+    )
+
+@app.route('/api/login', methods = ['POST', 'DELETE'])
+
+def login():
+    if request.method == 'POST':
+        conn = None
+        cursor = None
+        user = request.get_json()
+        username = user["username"]
+        password = user["password"]
+        
+       
+        
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO users(username, password) VALUES (?, ?)", [username, password])
+            conn.commit()
+            result = cursor.rowcount
+            print("###########",result)
+        except Exception as ex:
+            print("error")
+            print(ex)
+        finally:
+            if (cursor != None):
+                cursor.close()
+            if (conn != None):
+                conn.rollback()
+                conn.close()
+                return Response(
+                    "successfully created!",
+                    mimetype="text/html",
+                    status=201
+                )
+            else:
+                return Response(
+                    "something wrong..",
+                    mimetype="text/html",
+                    status=500
+                )    
+        return Response(
+            "error",
+            mimetype="text/html",
+            status=400
+        ) 
+    elif request.method == 'DELETE':
+        conn = None
+        cursor = None
+        # user = request.get_json()
+        # user_id = user["id"]
+        user_id = request.json
+        try:
+            conn = connect()
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM users WHERE id = ?", [user_id])
+            conn.commit()
+        except Exception as ex:
+            print("error")
+            print(ex)
+        finally:
+            if (cursor != None):
+                cursor.close()
+            if (conn != None):
+                conn.rollback()
+                conn.close()
+                return Response(
+                    "Deleted!",
+                    mimetype="text/html",
+                    status=201
+                ) 
+            else:
+                return Response(
+                    "something wrong",
+                    mimetype="text/html",
+                    status=500
+                ) 
