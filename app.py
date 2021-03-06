@@ -12,12 +12,12 @@ CORS(app)
 
 
 def connect():
-      return mariadb.connect(
-         user = dbcreds.user,
-         password = dbcreds.password,
-         host = dbcreds.host,
-         port = dbcreds.port,
-         database = dbcreds.database
+    return mariadb.connect(
+        user = dbcreds.user,
+        password = dbcreds.password,
+        host = dbcreds.host,
+        port = dbcreds.port,
+        database = dbcreds.database
     )
 
 # End points for post page    
